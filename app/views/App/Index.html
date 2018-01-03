@@ -1,21 +1,33 @@
 {{set . "title" "Home"}}
+{{ append . "moreStyles" "css/custom.css"}}
 {{template "header.html" .}}
 
 <header class="jumbotron" style="background-color:#A9F16C">
-  <div class="container">
-    <div class="row">
-      <h1>It works!</h1>
-      <p></p>
+    <div class="container">
+        <div class="row">
+            <h1>{{ .greeting}}!</h1>
+            <p>{{ .message}}</p>
+        </div>
     </div>
-  </div>
 </header>
 
 <div class="container">
-  <div class="row">
-    <div class="span6">
-      {{template "flash.html" .}}
+    <div class="row">
+        <div class="span6">
+        {{template "flash.html" .}}
+        </div>
     </div>
-  </div>
+    <div class="row">
+        <div id="content-stream">
+        {{ range .contents}}
+            <div class="content-item-block">
+                <h5>{{ .Title}}</h5>
+                <p>{{ .Body}}</p>
+                <a href="#">{{ .Type}}</a>
+            </div>
+        {{ end }}
+        </div>
+    </div>
 </div>
 
 {{template "footer.html" .}}

@@ -2,6 +2,10 @@ package app
 
 import (
 	"github.com/revel/revel"
+	"log"
+	"github.com/jinzhu/gorm"
+	"github.com/koreset/homef/app/models"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 var (
@@ -11,6 +15,26 @@ var (
 	// BuildTime revel app build-time (ldflags)
 	BuildTime string
 )
+var DB *gorm.DB
+
+// init db
+func InitDB() {
+	var err error
+	// open db
+	driver := revel.Config.StringDefault("db.driver", "mysql")
+	conn_string := revel.Config.StringDefault("db.connect", "root:wordpass15@/homefdb?parseTime=True&loc=Local&charset=utf8")
+	log.Println("Connection String:::::: ", conn_string)
+	db, err := gorm.Open(driver, conn_string)
+	db.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(&models.Content{}, &models.Author{}, &models.Category{})
+	db.LogMode(true) // Print SQL statements
+
+	DB = db
+
+	if err != nil {
+		log.Println("FATAL", err)
+		panic(err)
+	}
+}
 
 func init() {
 	// Filters is the default set of global filters.
@@ -33,7 +57,7 @@ func init() {
 	// revel.DevMode and revel.RunMode only work inside of OnAppStart. See Example Startup Script
 	// ( order dependent )
 	// revel.OnAppStart(ExampleStartupScript)
-	// revel.OnAppStart(InitDB)
+	 revel.OnAppStart(InitDB)
 	// revel.OnAppStart(FillCache)
 }
 
