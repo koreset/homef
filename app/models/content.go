@@ -7,11 +7,11 @@ import (
 type Content struct {
 	gorm.Model
 	Type string
-	Title string
+	Title string `gorm:not null`
 	Body string
 	Summary string
 	Category Category
 	CategoryID int
 	Author Author
-	AuthorID int
+	AuthorID int `gorm:not null`
 }
