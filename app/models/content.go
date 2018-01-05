@@ -13,5 +13,6 @@ type Content struct {
 	Category Category
 	CategoryID int
 	Author Author
-	AuthorID int `gorm:not null`
+	AuthorID uint `gorm:not null`
+	Images []Photo
 }

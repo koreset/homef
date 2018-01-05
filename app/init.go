@@ -20,15 +20,21 @@ var DB *gorm.DB
 // init db
 func InitDB() {
 	var err error
+	author := models.Author{}
+	photo := models.Photo{}
+	content := models.Content{}
+	category := models.Category{}
+
 	// open db
 	driver := revel.Config.StringDefault("db.driver", "mysql")
 	conn_string := revel.Config.StringDefault("db.connect", "root:wordpass15@/homefdb?parseTime=True&loc=Local&charset=utf8")
 	log.Println("Connection String:::::: ", conn_string)
 	db, err := gorm.Open(driver, conn_string)
-	db.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(&models.Content{},
-		&models.Author{},
-		&models.Photo{},
-		&models.Category{})
+	db.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(&content,
+		&author,
+		&photo,
+		&category)
+	db.Model(&content).Related(&photo)
 	db.LogMode(true) // Print SQL statements
 
 	DB = db
